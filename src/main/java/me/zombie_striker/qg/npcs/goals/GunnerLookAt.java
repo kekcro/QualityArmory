@@ -11,7 +11,7 @@ import net.citizensnpcs.api.ai.PathStrategy;
 import net.citizensnpcs.api.ai.TargetType;
 import net.citizensnpcs.api.npc.NPC;
 
-public class GunnerLookAt implements Navigator{
+public abstract class GunnerLookAt implements Navigator{
 
 	@Override
 	public void cancelNavigation() {
