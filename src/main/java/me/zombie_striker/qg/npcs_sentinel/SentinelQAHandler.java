@@ -25,7 +25,7 @@ public class SentinelQAHandler extends SentinelIntegration {
 	}
 
 
-	private HashMap<UUID,Long> lastTimeShot = new HashMap<>();
+	//private HashMap<UUID,Long> lastTimeShot = new HashMap<>();
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -66,12 +66,23 @@ public class SentinelQAHandler extends SentinelIntegration {
 		faceAcc = st.fixForAcc(faceAcc);
 		st.faceLocation(st.getLivingEntity().getEyeLocation().clone().add(faceAcc.multiply(10)));
 
-		if(lastTimeShot.containsKey(st.getLivingEntity().getUniqueId())){
-			if(System.currentTimeMillis()-lastTimeShot.get(st.getLivingEntity().getUniqueId())/1000 < (Math.max(g.isAutomatic()?(10.0/g.getFireRate())/20:g.getDelayBetweenShotsInSeconds()*1.5,g.getDelayBetweenShotsInSeconds()))){
-				return false;
-			}
+		//if(lastTimeShot.containsKey(st.getLivingEntity().getUniqueId())){
+		//	if(System.currentTimeMillis()-lastTimeShot.get(st.getLivingEntity().getUniqueId())/1000 < (Math.max(g.isAutomatic()?(10.0/g.getFireRate())/20:g.getDelayBetweenShotsInSeconds()*1.5,g.getDelayBetweenShotsInSeconds()))){
+		//		return false;
+		//	}
+		//}
+
+		//lastTimeShot.put(st.getLivingEntity().getUniqueId(),System.currentTimeMillis());
+
+		int showdelay = ((int) (g.getDelayBetweenShotsInSeconds() * 1000));
+		QAMain.DEBUG("showdelay:" + showdelay);
+
+		QAMain.DEBUG("Checking delay...");
+		if (GunUtil.isDelay(g, ((Player) st.getLivingEntity())))
+		{
+			QAMain.DEBUG("Shooting canceled due to last shot being too soon.");
+			return false;
 		}
-		lastTimeShot.put(st.getLivingEntity().getUniqueId(),System.currentTimeMillis());
 
 		double sway = g.getSway() * st.accuracy;
 		if (g.usesCustomProjctiles()) {
@@ -102,6 +113,7 @@ public class SentinelQAHandler extends SentinelIntegration {
 			st.attackHelper.rechase();
 			QAMain.DEBUG("Sentinel rechase");
 		}
+		g.getLastShotForGun().put(st.getLivingEntity().getUniqueId(),System.currentTimeMillis());
 		return true;
 	}
 }
